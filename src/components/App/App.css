@@ -1,0 +1,28 @@
+.App {
+  text-align: center;
+}
+
+.minimal-link {
+  color: inherit !important;
+}
+
+.minimal-link:hover {
+  color: rgb(55, 110, 211) !important;
+  text-decoration: none;
+}
+
+.card-style1 {
+  box-shadow: 0px -1px 0 rgba(211, 211, 211, 0.262),
+    1px 0 0px rgba(211, 211, 211, 0.462), -1px 0 0px rgba(211, 211, 211, 0.6),
+    0 2px 3px rgba(138, 138, 138, 0.5);
+  text-align: left;
+  margin-bottom: 20px;
+  border-radius: 0px !important;
+  border: none !important;
+}
+
+.hover-shadow:hover {
+  box-shadow: 0px -1px 0 rgba(211, 211, 211, 0.262),
+    1px 0 0px rgba(211, 211, 211, 0.462), -1px 0 0px rgba(211, 211, 211, 0.6),
+    0 2px 0px rgba(138, 138, 138, 0.2), 0 2px 7px rgba(138, 138, 138, 0.876);
+}

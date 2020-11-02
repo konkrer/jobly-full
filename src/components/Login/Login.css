@@ -1,0 +1,14 @@
+.nav-btn:focus,
+.nav-btn:active {
+  box-shadow: none !important;
+}
+
+.nav-btn-left {
+  border-radius: 5px 0px 0px 0px !important;
+  border: none;
+}
+
+.nav-btn-right {
+  border-radius: 0px 5px 0px 0px !important;
+  border: none;
+}

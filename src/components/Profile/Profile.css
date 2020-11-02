@@ -1,0 +1,9 @@
+.card-style2 {
+  background: white;
+  padding: 2rem;
+  border: 1px solid rgba(211, 211, 211, 0.669);
+}
+
+.card-style2 label {
+  font-weight: bold;
+}
