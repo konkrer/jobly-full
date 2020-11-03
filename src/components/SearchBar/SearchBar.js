@@ -14,7 +14,7 @@ const SearchBar = ({ setQueryParams }) => {
 
   const handleSubmit = e => {
     e.preventDefault();
-    setQueryParams(queryParams => formData);
+    setQueryParams(() => formData);
   };
 
   return (

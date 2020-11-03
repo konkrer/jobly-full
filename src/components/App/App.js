@@ -6,11 +6,14 @@ import useLocalStorageState from '../../hooks/useLocalStorage';
 import './App.css';
 
 function App() {
-  const [token, setToken] = useLocalStorageState('token');
+  const [userData, setUserData] = useLocalStorageState('userData', {
+    token: null,
+    user: null,
+  });
 
   return (
     <div className="App bg-light">
-      <TokenContext.Provider value={{ token, setToken }}>
+      <TokenContext.Provider value={{ userData, setUserData }}>
         <Navbar />
         <div className="container">
           <Routes />

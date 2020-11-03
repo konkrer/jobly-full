@@ -6,7 +6,7 @@ import TokenContext from '../../utils/tokenContext';
 
 const LoginForm = () => {
   const history = useHistory();
-  const { setToken } = useContext(TokenContext);
+  const { setUserData } = useContext(TokenContext);
   const [user, setUser] = useState({
     username: '',
     password: '',
@@ -19,15 +19,14 @@ const LoginForm = () => {
   const handleSubmit = async e => {
     e.preventDefault();
 
-    const resp = await JoblyApi.addProfile(user);
+    const tokenResp = await JoblyApi.addProfile(user);
 
-    console.log(resp);
-
-    if (resp.data?.error) {
-      setErrors(() => resp.data.error.message);
+    if (tokenResp.data?.error) {
+      setErrors(() => tokenResp.data.error.message);
     } else {
+      const userResp = await JoblyApi.getProfile();
       history.push('/');
-      setToken(resp.token);
+      setUserData({ ...tokenResp, ...userResp });
     }
   };
 

@@ -35,7 +35,6 @@ class JoblyApi {
   }
 
   static async getCompany(handle, params) {
-    console.log(params, 'get Company');
     let res = await this.request(`companies/${handle}`, params);
     return res.company;
   }
@@ -46,10 +45,10 @@ class JoblyApi {
     return res.jobs;
   }
 
-  // static async getJob(id) {
-  //   let res = await this.request(`jobs/${id}`);
-  //   return res.job;
-  // }
+  static async applyJob(id, data) {
+    let res = await this.request(`jobs/${id}/apply`, data, 'post');
+    return res;
+  }
 
   //** User API methods */
   static async getProfile(username, params) {

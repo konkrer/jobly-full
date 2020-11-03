@@ -3,15 +3,14 @@ import { Redirect } from 'react-router-dom';
 import { Button, Form, FormGroup, Label, Input, Alert } from 'reactstrap';
 import JoblyApi from '../../utils/JoblyApi';
 import TokenContext from '../../utils/tokenContext';
-import jwt from 'jsonwebtoken';
 import './Profile.css';
 
 const Profile = () => {
-  const { token } = useContext(TokenContext);
+  const { userData, setUserData } = useContext(TokenContext);
   const [feedback, setFeedback] = useState(null);
   const [errors, setErrors] = useState([]);
 
-  const [user, setUser] = useState({
+  const [formData, setFormData] = useState({
     username: '',
     password: '',
     first_name: '',
@@ -22,26 +21,30 @@ const Profile = () => {
 
   useEffect(() => {
     const getUserProfile = async () => {
-      const params = { _token: token };
-      const username = jwt.decode(token).username;
+      const params = { _token: userData.token };
 
-      const resp = await JoblyApi.getProfile(username, params);
+      // error handling???
+      const userResp = await JoblyApi.getProfile(userData.username, params);
 
-      // change null to empty string
-      resp.photo_url = resp.photo_url ? resp.photo_url : '';
+      delete userResp.jobs;
+      // if photo_url is null change to empty string
+      userResp.photo_url = userResp.photo_url ? userResp.photo_url : '';
 
-      setUser(user => ({ ...user, ...resp }));
+      setFormData(formData => ({ ...formData, ...userResp }));
     };
     getUserProfile();
-  }, [token]);
+  }, [userData]);
+
+  // if user not logged in go to login
+  if (!userData.token) return <Redirect to="/login" />;
 
   const handleChange = e => {
     const { name, value } = e.target;
 
     setFeedback(null);
 
-    setUser(user => ({
-      ...user,
+    setFormData(formData => ({
+      ...formData,
       [name]: value,
     }));
   };
@@ -49,31 +52,29 @@ const Profile = () => {
   const handleSubmit = async e => {
     e.preventDefault();
 
-    const data = { ...user };
+    const data = { ...formData };
 
-    data._token = token;
-    delete data.jobs;
+    data._token = userData.token;
     delete data.username;
-    if (!data.photo_url) delete data.photo_url;
+    if (!data.photo_url) data.photo_url = '';
 
-    const resp = await JoblyApi.updateProfile(user.username, data);
+    const userResp = await JoblyApi.updateProfile(formData.username, data);
 
-    if (resp.data?.error) {
+    if (userResp.data?.error) {
       setErrors(() =>
-        resp.data.message
-          ? [resp.data.message]
-          : Array.isArray(resp.data.error.message)
-          ? resp.data.error.message
-          : [resp.data.error.message]
+        userResp.data.message
+          ? [userResp.data.message]
+          : Array.isArray(userResp.data.error.message)
+          ? userResp.data.error.message
+          : [userResp.data.error.message]
       );
       setFeedback(null);
     } else {
       setFeedback(() => 'Profile Updated');
       setErrors([]);
+      setUserData({ ...userData, ...userResp.user });
     }
   };
-
-  if (!token) return <Redirect to="/" />;
 
   return (
     <div className="Profile row text-left">
@@ -82,7 +83,7 @@ const Profile = () => {
         <Form className="card-style2 rounded" onSubmit={handleSubmit}>
           <FormGroup onSubmit={handleSubmit}>
             <Label for="username">Username</Label>
-            <Input plaintext readOnly value={user.username} />
+            <Input plaintext readOnly value={formData.username} />
           </FormGroup>
           <FormGroup>
             <Label for="first_name">First Name</Label>
@@ -90,7 +91,7 @@ const Profile = () => {
               type="text"
               name="first_name"
               id="first_name"
-              value={user.first_name}
+              value={formData.first_name}
               onChange={handleChange}
               required
             />
@@ -101,7 +102,7 @@ const Profile = () => {
               type="text"
               name="last_name"
               id="last_name"
-              value={user.last_name}
+              value={formData.last_name}
               onChange={handleChange}
               required
             />
@@ -112,7 +113,7 @@ const Profile = () => {
               type="text"
               name="email"
               id="email"
-              value={user.email}
+              value={formData.email}
               onChange={handleChange}
               required
             />
@@ -123,7 +124,7 @@ const Profile = () => {
               type="text"
               name="photo_url"
               id="photo_url"
-              value={user.photo_url}
+              value={formData.photo_url}
               onChange={handleChange}
             />
           </FormGroup>
@@ -133,7 +134,7 @@ const Profile = () => {
               type="password"
               name="password"
               id="password"
-              value={user.password}
+              value={formData.password}
               onChange={handleChange}
               required
             />

@@ -6,20 +6,20 @@ import Job from '../Job/Job';
 import './CompanyDetail.css';
 
 const CompanyDetail = () => {
-  const { token } = useContext(TokenContext);
+  const { userData } = useContext(TokenContext);
   const { handle } = useParams();
   const [companyData, setCompanyData] = useState(null);
 
   useEffect(() => {
     const getCompany = async () => {
-      const params = { _token: token };
+      const params = { _token: userData.token };
 
       const resp = await JoblyApi.getCompany(handle, params);
 
       setCompanyData(() => resp);
     };
     getCompany();
-  }, [handle, token]);
+  }, [handle, userData]);
 
   return companyData ? (
     <div className="CompanyDetail pt-5 text-left">

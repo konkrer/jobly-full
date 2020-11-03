@@ -6,8 +6,8 @@ import TokenContext from '../../utils/tokenContext';
 
 const LoginForm = () => {
   const history = useHistory();
-  const { setToken } = useContext(TokenContext);
-  const [user, setUser] = useState({
+  const { setUserData } = useContext(TokenContext);
+  const [formData, setFormData] = useState({
     username: '',
     password: '',
   });
@@ -16,20 +16,23 @@ const LoginForm = () => {
   const handleSubmit = async e => {
     e.preventDefault();
 
-    const resp = await JoblyApi.login(user);
+    const tokenResp = await JoblyApi.login(formData);
 
-    if (resp.status === 401) setErrors(() => ['Invalid Credentials']);
+    if (tokenResp.status === 401) setErrors(() => ['Invalid Credentials']);
     else {
+      const userResp = await JoblyApi.getProfile(formData.username, {
+        _token: tokenResp.token,
+      });
       history.push('/');
-      setToken(resp.token);
+      setUserData({ ...tokenResp, ...userResp });
     }
   };
 
   const handleChange = e => {
     const { name, value } = e.target;
 
-    setUser(user => ({
-      ...user,
+    setFormData(formData => ({
+      ...formData,
       [name]: value,
     }));
   };
@@ -41,7 +44,7 @@ const LoginForm = () => {
         <Input
           id="username"
           name="username"
-          value={user.username}
+          value={formData.username}
           onChange={handleChange}
           required
         />
@@ -52,7 +55,7 @@ const LoginForm = () => {
           type="password"
           name="password"
           id="password"
-          value={user.password}
+          value={formData.password}
           onChange={handleChange}
           required
         />

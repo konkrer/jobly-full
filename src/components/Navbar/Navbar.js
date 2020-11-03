@@ -5,7 +5,7 @@ import TokenContext from '../../utils/tokenContext';
 import './Navbar.css';
 
 const NavbarJobly = () => {
-  const { token } = useContext(TokenContext);
+  const { userData } = useContext(TokenContext);
   const [isOpen, setIsOpen] = useState(false);
 
   const toggle = () => setIsOpen(!isOpen);
@@ -20,18 +20,24 @@ const NavbarJobly = () => {
         <Collapse isOpen={isOpen} navbar>
           <Nav className="ml-auto" navbar>
             <NavItem>
-              <NavLink to={`${token ? '/companies' : '/login'}`}>
+              <NavLink to={`${userData.token ? '/companies' : '/login'}`}>
                 Companies
               </NavLink>
             </NavItem>
             <NavItem>
-              <NavLink to={`${token ? '/jobs' : '/login'}`}>Jobs</NavLink>
+              <NavLink to={`${userData.token ? '/jobs' : '/login'}`}>
+                Jobs
+              </NavLink>
             </NavItem>
             <NavItem>
-              <NavLink to={`${token ? '/profile' : '/login'}`}>Profile</NavLink>
+              <NavLink to={`${userData.token ? '/profile' : '/login'}`}>
+                Profile
+              </NavLink>
             </NavItem>
             <NavItem>
-              <NavLink to="/login">{token ? 'Log out' : 'Login'}</NavLink>
+              <NavLink to="/login">
+                {userData.token ? 'Log out' : 'Login'}
+              </NavLink>
             </NavItem>
           </Nav>
         </Collapse>

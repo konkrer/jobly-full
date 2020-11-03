@@ -5,11 +5,11 @@ import TokenContext from '../../utils/tokenContext';
 import './Home.css';
 
 const Home = () => {
-  const { token } = useContext(TokenContext);
+  const { userData } = useContext(TokenContext);
 
   let greeting;
 
-  if (token) {
+  if (userData.token) {
     greeting = <h2 className="">Welcome Back!</h2>;
   } else {
     greeting = (

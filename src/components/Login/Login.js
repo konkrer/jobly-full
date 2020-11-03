@@ -9,12 +9,12 @@ import './Login.css';
 
 const Login = () => {
   const history = useHistory();
-  const { token, setToken } = useContext(TokenContext);
+  const { userData, setUserData } = useContext(TokenContext);
   const [loginVisible, toggleLoginVisible] = useToggle(true);
 
-  if (token) {
+  if (userData.token) {
     history.push('/');
-    setToken(null);
+    setUserData({ token: null, user: null });
 
     return <Redirect to="/" />;
   }
