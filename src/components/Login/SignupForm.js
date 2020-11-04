@@ -4,10 +4,10 @@ import { Button, Form, FormGroup, Label, Input, Alert } from 'reactstrap';
 import JoblyApi from '../../utils/JoblyApi';
 import TokenContext from '../../utils/tokenContext';
 
-const LoginForm = () => {
+const SignupForm = () => {
   const history = useHistory();
   const { setUserData } = useContext(TokenContext);
-  const [user, setUser] = useState({
+  const [formData, setFormData] = useState({
     username: '',
     password: '',
     first_name: '',
@@ -19,12 +19,14 @@ const LoginForm = () => {
   const handleSubmit = async e => {
     e.preventDefault();
 
-    const tokenResp = await JoblyApi.addProfile(user);
+    const tokenResp = await JoblyApi.addProfile(formData);
 
     if (tokenResp.data?.error) {
       setErrors(() => tokenResp.data.error.message);
     } else {
-      const userResp = await JoblyApi.getProfile();
+      const userResp = await JoblyApi.getProfile(formData.username, {
+        _token: tokenResp.token,
+      });
       history.push('/');
       setUserData({ ...tokenResp, ...userResp });
     }
@@ -33,8 +35,8 @@ const LoginForm = () => {
   const handleChange = e => {
     const { name, value } = e.target;
 
-    setUser(user => ({
-      ...user,
+    setFormData(formData => ({
+      ...formData,
       [name]: value,
     }));
   };
@@ -46,7 +48,7 @@ const LoginForm = () => {
         <Input
           id="username"
           name="username"
-          value={user.username}
+          value={formData.username}
           onChange={handleChange}
           required
         />
@@ -57,7 +59,7 @@ const LoginForm = () => {
           type="password"
           name="password"
           id="password"
-          value={user.password}
+          value={formData.password}
           onChange={handleChange}
           required
         />
@@ -68,7 +70,7 @@ const LoginForm = () => {
           type="text"
           name="first_name"
           id="first_name"
-          value={user.first_name}
+          value={formData.first_name}
           onChange={handleChange}
           required
         />
@@ -79,7 +81,7 @@ const LoginForm = () => {
           type="text"
           name="last_name"
           id="last_name"
-          value={user.last_name}
+          value={formData.last_name}
           onChange={handleChange}
           required
         />
@@ -90,7 +92,7 @@ const LoginForm = () => {
           type="text"
           name="email"
           id="email"
-          value={user.email}
+          value={formData.email}
           onChange={handleChange}
           required
         />
@@ -109,4 +111,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default SignupForm;
