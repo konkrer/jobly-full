@@ -20,19 +20,13 @@ const NavbarJobly = () => {
         <Collapse isOpen={isOpen} navbar>
           <Nav className="ml-auto" navbar>
             <NavItem>
-              <NavLink to={`${userData.token ? '/companies' : '/login'}`}>
-                Companies
-              </NavLink>
+              <NavLink to="/companies">Companies</NavLink>
             </NavItem>
             <NavItem>
-              <NavLink to={`${userData.token ? '/jobs' : '/login'}`}>
-                Jobs
-              </NavLink>
+              <NavLink to="/jobs">Jobs</NavLink>
             </NavItem>
             <NavItem>
-              <NavLink to={`${userData.token ? '/profile' : '/login'}`}>
-                Profile
-              </NavLink>
+              <NavLink to="/profile">Profile</NavLink>
             </NavItem>
             <NavItem>
               <NavLink to="/login">
