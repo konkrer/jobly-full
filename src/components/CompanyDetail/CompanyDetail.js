@@ -1,5 +1,5 @@
 import { useContext, useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { Redirect, useParams } from 'react-router-dom';
 import TokenContext from '../../utils/tokenContext';
 import JoblyApi from '../../utils/JoblyApi';
 import Job from '../Job/Job';
@@ -16,10 +16,15 @@ const CompanyDetail = () => {
 
       const resp = await JoblyApi.getCompany(handle, params);
 
-      setCompanyData(() => resp);
+      if (resp.data?.error) return setCompanyData(false);
+
+      setCompanyData(() => resp.company);
     };
     getCompany();
   }, [handle, userData]);
+
+  // if api call happened and no data was found to to companies.
+  if (companyData === false) return <Redirect to="/companies" />;
 
   return companyData ? (
     <div className="CompanyDetail pt-5 text-left">
